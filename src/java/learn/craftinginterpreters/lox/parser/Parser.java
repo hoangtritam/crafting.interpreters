@@ -1,6 +1,7 @@
 package learn.craftinginterpreters.lox.parser;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import learn.craftinginterpreters.lox.Lox;
@@ -37,10 +38,31 @@ public class Parser {
 		while (!eof()) {
 			Stmt s = statement();
 			if (s != null) {
-				statements.add(statement());
+				statements.add(blockStatement());
 			}
 		}
 		return statements;
+	}
+	
+	protected Stmt blockStatement() {
+		if (match(Type.LEFT_BRACE)) {
+			Token opening = previous();
+			List<Stmt> stmts = new LinkedList<>();
+			while (!eof() && match(Type.RIGHT_BRACE)) {
+				Stmt s = statement();
+				if (s != null) {
+					stmts.add(statement());
+				}
+			}
+			
+			Token previous = previous();
+			if (previous.match(Type.RIGHT_BRACE))
+			{
+				return new BlockStmt(opening, previous, stmts);
+			}
+			throw error(opening, "Expect } for block statement.");
+		}
+		return statement();
 	}
 
 	protected Stmt statement() {

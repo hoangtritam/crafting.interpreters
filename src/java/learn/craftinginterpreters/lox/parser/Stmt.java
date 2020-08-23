@@ -9,5 +9,7 @@ public interface Stmt {
 		public R visit(PrintStmt stmt);
 		
 		public R visit(VarDeclareStmt stmt);
+		
+		public R visit(BlockStmt stmt);
 	}
 }

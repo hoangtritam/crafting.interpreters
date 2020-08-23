@@ -5,6 +5,7 @@ import learn.craftinginterpreters.lox.lexer.Token;
 import learn.craftinginterpreters.lox.lexer.Type;
 import learn.craftinginterpreters.lox.parser.Assignment;
 import learn.craftinginterpreters.lox.parser.Binary;
+import learn.craftinginterpreters.lox.parser.BlockStmt;
 import learn.craftinginterpreters.lox.parser.Expr;
 import learn.craftinginterpreters.lox.parser.ExpressionStmt;
 import learn.craftinginterpreters.lox.parser.Grouping;
@@ -167,6 +168,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 			value = stmt.getInitializer().accept(this);
 		}
 		env.init(name, value);
+		return null;
+	}
+	
+	@Override
+	public Void visit(BlockStmt block) {
+		env = new Environment(env);
+		for (Stmt stmt : block.getStatements())
+		{
+			stmt.accept(this);
+		}
+		env = env.getParent();
 		return null;
 	}
 
