@@ -13,7 +13,7 @@ public class Assignment implements Expr {
 
 	@Override
 	public <R> R accept(Visitor<R> visitor) {
-		return null;
+		return visitor.visit(this);
 	}
 
 	public Token getIdentifier() {
